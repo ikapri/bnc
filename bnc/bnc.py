@@ -1,12 +1,14 @@
 import random , itertools
 from util import check , generate_random
+from clint.textui import puts
 
 class Bot:
-	def __init__(self):
+	def __init__(self,player_num):
 		self.chance = 0
 		self.digits = "0123456789"
 		self.ss = self.gen_ss()
 		self.num = generate_random()
+		self.player_num = player_num
 
 	def gen_ss(self):
 		""" generate sample space i.e all possible 4 digit
@@ -22,10 +24,16 @@ class Bot:
 		""" guess the opponents number """
 		if self.chance == 0:
 			self.chance+=1
-			return generate_random()
+			guessed_num = generate_random()
 		else:
 			self.chance+=1
-			return random.choice(self.ss)		
+			guessed_num = random.choice(self.ss)
+		return guessed_num	
+
+	def guess_response(self,guess,b,c):
+		puts("Player %s Guessed ---> %s" % (self.player_num,guess))
+		puts("Bulls %s ..... Cows %s" % (b,c))
+		self.prune(guess,b,c)
 	
 	def prune(self,guess,b,c):
 		""" reduce the sample space based on the 
@@ -39,20 +47,20 @@ class Bot:
 		self.ss = ss1
 
 class Player:
-	def __init__(self):
+	def __init__(self,player_num):
 		self.num = self.take_input()
 		self.chance = 0
+		self.player_num = player_num
 
 	def take_input(self):
 		""" take input from user """
-		num = raw_input("Enter Your 4 digit Secret Number without repeating digits\n")
+		puts("Enter Your 4 digit Secret Number without repeating digits")
+		num = raw_input()
 		if not self.validate_input(num):
-			print "Invalid Number...Generating Random Number for Computer to Guess"
+			puts("Invalid Number...Generating Random Number for Computer to Guess")
 			num = generate_random()
-			print "Your Number is ... %s"%num
-			return num
-		else:		
-			return num
+			puts("Your Number is ... %s"%num)
+		return num
 
 	def validate_input(self,num):
 		if not len(set(num)) == 4:
@@ -64,8 +72,12 @@ class Player:
 		while True:
 			num = raw_input("Guess Opponents Number....\n")
 			if not self.validate_input(num):
-				print "Please enter 4 digit number with non repeating digits...Try Again"
+				puts("Please enter 4 digit number with non repeating digits...Try Again")
 				continue
 			else:
 				self.chance+=1
 				return num
+
+	def guess_response(self,guess,b,c):
+		puts("Player %s Guessed ---> %s" % (self.player_num,guess))
+		puts("Bulls %s ..... Cows %s" % (b,c))
