@@ -9,6 +9,12 @@ class Bot:
 		self.ss = self.gen_ss()
 		self.num = generate_random()
 		self.player_num = player_num
+		if player_num == 1:
+			self.indentation = 1
+		else:
+			self.indentation = 50
+			
+
 
 	def gen_ss(self):
 		""" generate sample space i.e all possible 4 digit
@@ -48,16 +54,20 @@ class Bot:
 
 class Player:
 	def __init__(self,player_num):
-		self.num = self.take_input()
-		self.chance = 0
 		self.player_num = player_num
+		self.num = self.take_input()
+		self.chance = 0		
+		if player_num == 1:
+			self.indentation = 1
+		else:
+			self.indentation = 50
 
 	def take_input(self):
 		""" take input from user """
-		puts("Enter Your 4 digit Secret Number without repeating digits")
+		puts("Player %s , Enter Your 4 digit Secret Number without repeating digits" % self.player_num)
 		num = raw_input()
 		if not self.validate_input(num):
-			puts("Invalid Number...Generating Random Number for Computer to Guess")
+			puts("Invalid Number...Generating Random Number On Your Behalf")
 			num = generate_random()
 			puts("Your Number is ... %s"%num)
 		return num
@@ -70,7 +80,8 @@ class Player:
 	
 	def guess(self):
 		while True:
-			num = raw_input("Guess Opponents Number....\n")
+			puts("Guess opponents Number")
+			num = raw_input()
 			if not self.validate_input(num):
 				puts("Please enter 4 digit number with non repeating digits...Try Again")
 				continue
